@@ -1,0 +1,28 @@
+Goblit by Timception  
+---  
+![Goblit by Timception](https://github.com/Timception/goblit/blob/main/img/Goblit-Pixel-Graphic.png)  
+
+## 🆕 Key Features
+
+- [ZMK Studio](https://zmk.studio/) enabled, and can also be keymapped using [Nick Coutsos' Editor](https://github.com/nickcoutsos/keymap-editor)  
+- [Nick Coutsos Online Editor](https://nickcoutsos.github.io/keymap-editor/)  
+- Connects through a **dongle** for improved wireless functionality  
+- This is a 37-Key Split Keyboard with a Trackball that requires lots of shortcuts to access the keys otherwise visibly available on a larger split (Not for Beginners)  
+- Can be configured to use either MX Switches or Kailh Choc V1/V2 Switches  
+- This could be seen as a miniature version of [Drift Keyboard V4](https://github.com/Timception/drift-v4-trackball-dongle)  
+
+
+# Important Notes on using this keyboard
+
+- My particular solution to using such a small keyboard has led to heavy use of [Mod-Morph Behaviour](https://zmk.dev/docs/keymaps/behaviors/mod-morph) which basically adds custom shortcut combos in addition to predefined layers in the [Keymap File](https://github.com/Timception/goblit/blob/main/config/goblit.keymap). You will likely need to have prior experience with split keyboards and basic coding knowledge to properly fiddle with this. My predefined mod-morphs are essentially mods involving the SHIFT key.  
+- TLDR; This keyboard is not for beginners.
+
+
+# Keymap
+
+![Keymap](https://github.com/Timception/goblit/blob/main/keymap-drawer/goblit.svg)  
+
+
+# Origin
+
+- After trying this super tiny split: [Bad-Temper](https://github.com/essFitt/Bad-Temper), I started to actually understand why small keyboards are so fun to use! Very compact and nicely done.
