@@ -20,11 +20,11 @@
 ---
 include:
   - board: nice_nano//zmk
-    shield: drift_left
-    artifact-name: drift_left
+    shield: goblit_left
+    artifact-name: goblit_left
   - board: nice_nano//zmk
-    shield: drift_right_central
+    shield: goblit_right_central
     snippet: studio-rpc-usb-uart
-    artifact-name: drift_right_central
+    artifact-name: goblit_right_central
   - board: nice_nano//zmk
     shield: settings_reset
