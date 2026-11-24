@@ -1,4 +1,4 @@
-if SHIELD_GOBLIT_DONGLE || SHIELD_GOBLIT_LEFT || SHIELD_GOBLIT_RIGHT
+if SHIELD_GOBLIT_LEFT || SHIELD_GOBLIT_RIGHT
 
 config ZMK_SPLIT
 	default y
@@ -9,19 +9,14 @@ config ZMK_POINTING
 endif
 
 
-if SHIELD_GOBLIT_DONGLE
+if SHIELD_GOBLIT_RIGHT_CENTRAL
 
 config ZMK_KEYBOARD_NAME
-	default "Goblit"
+	default "Goblit BLE"
 
 config ZMK_SPLIT_ROLE_CENTRAL
 	default y
-
-endif
-
-
-if SHIELD_GOBLIT_RIGHT
-
+	
 config SPI
     default y
 
