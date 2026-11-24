@@ -12,17 +12,96 @@
 	col-offset = <5>;
 };
 
-// Enable SPI1 bus (required for PMW3610 trackball)
-&spi1 {
-    status = "okay";
+&pinctrl {
+    spi1_default: spi1_default { // Normal SPI operation pins
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK, 0, 8)>,
+                    <NRF_PSEL(SPIM_MOSI, 0, 6)>,
+                    <NRF_PSEL(SPIM_MISO, 0, 6)>;
+        };
+    };
+
+    // Low-power SPI configuration for sleep mode
+    spi1_sleep: spi1_sleep {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK, 0, 8)>,
+                    <NRF_PSEL(SPIM_MOSI, 0, 6)>,
+                    <NRF_PSEL(SPIM_MISO, 0, 6)>;
+            low-power-enable; // reduces power when idle
+        };
+    };
 };
 
-// Define the local *split input* trackball child node
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+
+&spi1 {                                     // input device node (SPI)
+    status = "okay";                        // keep SPI on
+    compatible = "nordic,nrf-spim";
+    pinctrl-0 = <&spi1_default>;            // default pins
+    pinctrl-1 = <&spi1_sleep>;              // sleep pins
+    pinctrl-names = "default", "sleep";
+    cs-gpios = <&gpio0 31 GPIO_ACTIVE_LOW>; // chip select for SPI
+
+    trackball: trackball@0 {
+        status = "okay";
+        compatible = "pixart,pmw3610-alt";
+        reg = <0>;                                                // first SPI slave device
+        spi-max-frequency = <2000000>;                            // 2 MHz max SPI frequency
+        irq-gpios = <&gpio0 22 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>; // interrupt pin
+        cpi = <600>;                                              // trackball CPI
+		// swap-xy;                                               // optional
+        invert-x;                                                 // optional
+        // invert-y;                                              // optional
+        evt-type = <INPUT_EV_REL>;                                // relative motion events
+        x-input-code = <INPUT_REL_X>;                             // X-axis movement
+        y-input-code = <INPUT_REL_Y>;                             // Y-axis movement
+    };
+};
+
+#include "device_input.dtsi"
+
+
+/ {
+	/* temp-layer instance to set an idle guard */
+	am_temp_layer: zip_temp_layer {
+		compatible = "zmk,input-processor-temp-layer";
+		#input-processor-cells = <2>;   /* args: <layer timeout_ms> */
+		require-prior-idle-ms = <500>;  /* time before automouse can activate after last keypress, try 150–300 to taste */
+	};
+};
+
+
+&trackball_split_listener { // local trackball input split device child node, receiving events from the peripheral and raising them locally
+	status = "okay";
+    	input-processors = 
+		    <&am_temp_layer 4 659>;   /* <- guarded automouse: layer 4 for 0.659s */
+			
+	// Suppress automouse entirely while a momentary layer is held
+    // (LOWER=1, RAISE=2, ADJUST=3, LOWER2=9, RAISE2=10, ADJUST2=11)
+    layer_guard {
+        layers = <1 2 3 9 10 11>;
+        input-processors = <&zip_xy_scaler 1 1000000>;
+    };
+	
+	scroll {
+		layers = <5 7>; // SCROLL
+		input-processors =
+            <&zip_xy_transform (INPUT_TRANSFORM_Y_INVERT)>,
+            <&zip_xy_scaler 1 16>,
+            <&zip_xy_to_scroll_mapper>;
+	};
+	
+	off {
+    layers = <8>;
+    input-processors =
+        <&zip_xy_scaler 1 1000000>;
+    };
+};
+
 // This lets the split firmware know the trackball belongs to this side
-&trackball_split_input {
+&trackball_split {
 	device = <&trackball>;
 };
-
 
 / {
 	chosen {
@@ -42,13 +121,5 @@
 			, <&pro_micro 5 GPIO_ACTIVE_HIGH>
 			, <&pro_micro 4 GPIO_ACTIVE_HIGH>
 			;
-		
-		// Row pins (R0–R3) with pull-downs
-		row-gpios
-            = <&pro_micro 19 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro 18 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro 15 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro 14 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            ;
 	};
 };
