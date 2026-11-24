@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: MIT
 
 #include "goblit.dtsi"
-#include "trackball.dtsi"                     // Trackball sensor configuration
-#include "device_input.dtsi"                  // Split input handling (trackball, encoders, etc.)
+#include <input/processors.dtsi>
 #include <dt-bindings/zmk/input_transform.h>
+#include <dt-bindings/zmk/matrix_transform.h>
+
 
 // Apply default transform with a column offset (shifts matrix alignment)
 &default_transform {
