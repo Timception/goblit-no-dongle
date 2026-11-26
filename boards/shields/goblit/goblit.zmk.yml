@@ -1,6 +1,6 @@
 file_format: "1"
-id: goblit
-name: goblit
+id: drift
+name: drift
 type: shield
 url: https://github.com/Timception
 requires: [pro_micro]
@@ -12,5 +12,5 @@ features:
   - underglow
   - studio
 siblings:
-  - goblit_left
-  - goblit_right
+  - drift_left
+  - drift_right
