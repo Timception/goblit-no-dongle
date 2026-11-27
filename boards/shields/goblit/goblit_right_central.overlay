@@ -47,9 +47,9 @@
         compatible = "pixart,pmw3610-alt";
         reg = <0>;                                                // first SPI slave device
         spi-max-frequency = <2000000>;                            // 2 MHz max SPI frequency
-        irq-gpios = <&gpio0 22 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>; // interrupt pin
+        irq-gpios = <&gpio1 6 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;  // interrupt pin
         cpi = <600>;                                              // trackball CPI
-		// swap-xy;                                               // optional
+	// swap-xy;                                               // optional
         invert-x;                                                 // optional
         // invert-y;                                              // optional
         evt-type = <INPUT_EV_REL>;                                // relative motion events
